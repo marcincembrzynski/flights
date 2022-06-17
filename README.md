@@ -14,11 +14,11 @@ Build
 
 Run
 
-```java -jar flights-0.0.1-SNAPSHOT.jar --flight.data=/flights.csv```
+```java -jar flights-0.0.1-SNAPSHOT.jar --flight.data=/path/to/flights.csv```
 
 
 Search
 
-``` http://localhost:8080/flights/2022/06/13 ``` 
-``` http://localhost:8080/flights/year/month/day ``` 
+``` http://localhost:8080/api/flights/2022/06/13 ``` 
+``` http://localhost:8080/api/flights/year/month/day ``` 
 

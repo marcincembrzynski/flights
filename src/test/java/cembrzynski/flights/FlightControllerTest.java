@@ -24,29 +24,17 @@ public class FlightControllerTest {
 
     @Test
     public void shouldGetFlightsForMonday(){
-
-        ResponseEntity<List<Flight>> actual = testRestTemplate.exchange("http://localhost:" + port + "/flights/2022/06/13", HttpMethod.GET, null, new ParameterizedTypeReference<List<Flight>>() {
-        });
-
-        assertTrue( actual.getBody().stream().allMatch(e -> e.getDays().contains(1)));
-        assertEquals(9, actual.getBody().size());
+        testGetFlights("2022/06/13", 1, 9);
     }
 
     @Test
     public void shouldGetFlightsForTuesday(){
-
-        ResponseEntity<List<Flight>> actual = testRestTemplate.exchange("http://localhost:" + port + "/flights/2022/06/14", HttpMethod.GET, null, new ParameterizedTypeReference<List<Flight>>() {
-        });
-
-        assertTrue(actual.getBody().stream().allMatch(e -> e.getDays().contains(2)));
-        assertEquals(8, actual.getBody().size());
-
+        testGetFlights("2022/06/14", 2, 8);
     }
 
     @Test
     public void shouldGetFlightsForWednesday(){
         testGetFlights("2022/06/15", 3, 7);
-
     }
 
     @Test
@@ -71,10 +59,18 @@ public class FlightControllerTest {
 
     private void testGetFlights(String date, int dayOfWeek, int size){
 
-        ResponseEntity<List<Flight>> actual = testRestTemplate.exchange("http://localhost:" + port + "/flights/" + date, HttpMethod.GET, null, new ParameterizedTypeReference<List<Flight>>() {
+        ResponseEntity<List<Flight>> responseEntity = testRestTemplate.exchange("http://localhost:" + port + "/api/flights/" + date, HttpMethod.GET, null, new ParameterizedTypeReference<List<Flight>>() {
         });
 
-        assertTrue(actual.getBody().stream().allMatch(e -> e.getDays().contains(dayOfWeek)));
-        assertEquals(size, actual.getBody().size());
+        List<Flight> actual = responseEntity.getBody();
+
+        assertTrue(actual.stream().allMatch(e -> e.getDays().contains(dayOfWeek)));
+        assertEquals(size, actual.size());
+        Flight previous = actual.get(0);
+
+        for (int i = 1; i < actual.size(); i++) {
+            assertTrue(actual.get(i).getDepartureTime().isAfter(previous.getDepartureTime()) || actual.get(i).getDepartureTime().equals(previous.getDepartureTime()));
+            previous = actual.get(i);
+        }
     }
 }

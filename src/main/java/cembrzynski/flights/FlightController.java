@@ -16,7 +16,7 @@ public class FlightController {
         this.flightSearch = flightSearch;
     }
 
-    @GetMapping("/flights/{year}/{month}/{day}")
+    @GetMapping("/api/flights/{year}/{month}/{day}")
     public ResponseEntity<List<Flight>> flights(@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("day") int day){
         return ResponseEntity.ok(flightSearch.getFlightsForDate(year, month, day));
     }
